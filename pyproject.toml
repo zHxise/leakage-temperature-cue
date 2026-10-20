@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ltcue"
+version = "0.1.0"
+description = "Joint effects of temperature and leakage on persistence, biomass and carbon-use efficiency in microbial consumer-resource communities"
+readme = "README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Braulio Arturo Rodríguez Angulo" }]
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "pandas>=2.0",
+    "digimicpy",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["slow: tests that run full simulations"]

@@ -1,0 +1,5 @@
+digimicpy @ git+https://github.com/DigiMicOrg/DigiMicPy.git@ac9b9fe8e7585f94742699622acdaae5cc9ee538
+numpy>=1.26
+scipy>=1.11
+pandas>=2.0
+pytest>=8

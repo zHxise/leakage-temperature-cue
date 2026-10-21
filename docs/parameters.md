@@ -41,14 +41,14 @@ temperature (303 K, 30 °C).
 |---|---|
 | Temperature | 288, 294, 300, 306, 312, 318 K (15–45 °C) |
 | Leakage fraction (same for all resources) | 0.0, 0.2, 0.4, 0.6, 0.8 |
-| Communities | 15 in the pilot, 60 in the main run |
+| Communities | 15 in the earlier script, 60 in the main run |
 
 ## Numerics and definitions
 
 | Setting | Value |
 |---|---|
 | Solver | LSODA, rtol 1e-8, atol 1e-12 |
-| Integration horizon | t = 0 to 60000 (the pilot script used 5000) |
+| Integration horizon | t = 0 to 60000 (the earlier script used 5000) |
 | Extinction threshold | consumer biomass ≤ 1e-5 |
 | Reference resource level for the retention metrics | R0 = 1 for every resource (normalised reference, not the realised equilibrium); sensitivity at 0.5 and 2 |
 

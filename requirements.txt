@@ -2,4 +2,5 @@ digimicpy @ git+https://github.com/DigiMicOrg/DigiMicPy.git@ac9b9fe8e7585f947426
 numpy>=1.26
 scipy>=1.11
 pandas>=2.0
+matplotlib>=3.8
 pytest>=8

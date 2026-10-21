@@ -3,7 +3,9 @@
 Recomputes the net-retention proxy and the gross retained fraction at
 R0 in {0.5, 1, 2} from the stored final states of a run (no new simulations),
 with biomass weights and with flux weights (biomass x uptake at the reference
-resource vector). It then checks which qualitative statements hold for every R0.
+resource vector). For a uniform R0 the proxy is exactly G - K/R0, so signs and
+orderings do not depend on R0 and only magnitudes (and the share of negative
+values) scale; the table makes this explicit.
 
 Example:
     python scripts/reference_sensitivity.py --prefix results/main
@@ -67,14 +69,26 @@ def claims_table(frame: pd.DataFrame, cfg) -> pd.DataFrame:
             drop = paired_difference(sub, value, 0.0, hot_start, hot)
             cold = paired_difference(sub, value, 0.0, mid, low)
             negative = sub[(sub["leak"] == max(cfg.leakage_fractions))]
+            neg_low = negative[negative["T"] == low][value]
+            neg_hot = negative[negative["T"] == hot][value]
+            # 27 C against both neighbours, at every leakage level (paired by community)
+            peak_ok = all(
+                paired_difference(sub, value, lk, t_nb, mid)[1] > 0
+                for lk in cfg.leakage_fractions for t_nb in (294.0, 306.0)
+            )
             rows.append({
                 "R0": r0, "metric": value,
                 "T_of_max_no_leakage_K": float(means.loc[0.0].idxmax()),
                 "leakage_slope_all_T_negative": bool(all(hi < 0 for _, _, hi in slope_ci)),
                 "change_39_to_45C_no_leakage": drop[0], "lo_39_45": drop[1], "hi_39_45": drop[2],
                 "change_27_to_15C_no_leakage": cold[0], "lo_27_15": cold[1], "hi_27_15": cold[2],
-                "share_negative_at_max_leakage_15C": float((negative[negative["T"] == low][value] < 0).mean()),
-                "share_negative_at_max_leakage_45C": float((negative[negative["T"] == hot][value] < 0).mean()),
+                "mid_higher_than_neighbours_all_leakage": bool(peak_ok),
+                "n_negative_at_max_leakage_15C": int((neg_low < 0).sum()),
+                "n_with_survivors_at_max_leakage_15C": int(neg_low.notna().sum()),
+                "share_negative_at_max_leakage_15C": float((neg_low < 0).sum() / neg_low.notna().sum()),
+                "n_negative_at_max_leakage_45C": int((neg_hot < 0).sum()),
+                "n_with_survivors_at_max_leakage_45C": int(neg_hot.notna().sum()),
+                "share_negative_at_max_leakage_45C": float((neg_hot < 0).sum() / neg_hot.notna().sum()),
             })
     return pd.DataFrame(rows)
 

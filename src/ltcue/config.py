@@ -51,8 +51,9 @@ class ExperimentConfig:
 
     # Randomness
     base_seed: int = 1000
-    # "independent": one child stream per trait (uptake, leakage, mortality,
-    # optima), so adding a trait never shifts the others.
+    # "independent": separate streams for uptake structure and scaling,
+    # leakage structure, mortality and thermal optima, so adding a trait never
+    # shifts the others.
     # "legacy": a single stream consumed in the order of the pilot script.
     rng_mode: Literal["independent", "legacy"] = "independent"
 

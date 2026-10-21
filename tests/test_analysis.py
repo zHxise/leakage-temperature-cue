@@ -42,3 +42,25 @@ def test_convergence_diagnostics_zero_at_exact_equilibrium():
     state = np.concatenate([np.zeros(cfg.n_consumers), p.resource_supply / p.resource_decay])
     out = convergence_diagnostics(state, p, np.zeros(cfg.n_consumers, dtype=bool))
     assert out["resid_abs"] < 1e-12 and out["rate_rel"] == 0.0
+
+
+def test_claims_table_denominator_excludes_communities_without_survivors():
+    import importlib.util
+    from pathlib import Path
+
+    path = Path(__file__).resolve().parents[1] / "scripts" / "reference_sensitivity.py"
+    spec = importlib.util.spec_from_file_location("reference_sensitivity", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    cfg = ExperimentConfig(leakage_fractions=(0.0, 0.8))
+    rows = []
+    for rep in range(4):
+        for leak in cfg.leakage_fractions:
+            for T in cfg.temperatures_k:
+                value = np.nan if (rep == 0 and T == 318.0 and leak == 0.8) else -0.1 - 0.01 * rep
+                rows.append({"R0": 1.0, "leak": leak, "T": T, "rep": rep,
+                             "proxy": value, "proxy_flux": value})
+    claims = module.claims_table(pd.DataFrame(rows), cfg)
+    assert claims["n_with_survivors_at_max_leakage_45C"].iloc[0] == 3
+    assert claims["share_negative_at_max_leakage_45C"].iloc[0] == 1.0

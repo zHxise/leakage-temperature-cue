@@ -20,8 +20,8 @@ Model assumptions, results and limitations are in
   communities.
 * Random traits come from separate streams (uptake structure and scaling,
   leakage structure, mortality, thermal optima).
-* `rng_mode="legacy"` reproduces the earlier single-script pilot
-  (15 communities); a regression test compares against its stored results in
+* `rng_mode="legacy"` reproduces the earlier single-script version
+  (15 communities, horizon 5000); a regression test compares against its stored results in
   `tests/data/`.
 
 ## Outcomes
@@ -60,20 +60,29 @@ python -m pip install -e .
 
 ```bash
 python -m pytest
-python scripts/run_experiment.py --n-communities 15 --n-jobs 2 --out results/pilot
+python scripts/run_experiment.py --n-communities 60 --n-jobs 2 --out results/main
+python scripts/reference_sensitivity.py --prefix results/main
+python scripts/make_figures.py
 ```
 
-This writes `results/pilot.csv` (one row per simulation), the final states and
-the exact configuration. The analysis and figures are reproduced with
-`scripts/make_figures.py` and `scripts/reference_sensitivity.py`; numerical
-checks with `scripts/run_sensitivity.py`.
+The experiment (1800 integrations) takes on the order of an hour; it writes
+`results/main.csv` (one row per simulation), the final states
+(`results/main.npz`) and the exact configuration. `reference_sensitivity.py`
+and `make_figures.py` only read those files, so the tables and figures can be
+reproduced without re-simulating (the final states are tracked in the repository).
+`make_figures.py` skips figure 5 if `main_reference_summary.csv` does not exist,
+so run `reference_sensitivity.py` first. Numerical checks are run with
+`scripts/run_sensitivity.py` (`run <variant> --reps START STOP`, then
+`summarize`); `results/sensitivity_summary.csv` was produced from the earlier
+column names (`cue`), which are identical to `retention_proxy`.
+Figures need matplotlib (included in `requirements.txt`).
 
 ## Layout
 
 ```
 src/ltcue/    configuration, community construction, simulation, metrics, analysis
 scripts/      run_experiment, merge_results, make_figures, reference_sensitivity, run_sensitivity
-tests/        unit tests and pilot regression test
+tests/        unit tests and regression test against the earlier script
 docs/         technical note and parameters
 results/      summary tables (final states and sensitivity runs are not tracked)
 figures/      figures of the technical note

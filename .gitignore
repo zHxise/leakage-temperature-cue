@@ -5,3 +5,5 @@ venv/
 *.egg-info/
 .pytest_cache/
 results/*.npz
+results/sensitivity/
+results/chunks/

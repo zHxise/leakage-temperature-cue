@@ -1,0 +1,54 @@
+{
+  "atol": 1e-12,
+  "base_seed": 1000,
+  "extinction_threshold": 1e-05,
+  "initial_consumer_biomass": 0.01,
+  "initial_resource": 1.0,
+  "leakage_fractions": [
+    0.0,
+    0.2,
+    0.4,
+    0.6,
+    0.8
+  ],
+  "method": "LSODA",
+  "mortality_range": [
+    0.15,
+    0.25
+  ],
+  "n_communities": 60,
+  "n_consumers": 20,
+  "n_modules": 2,
+  "n_resources": 10,
+  "reference_resource": 1.0,
+  "reference_temperature_k": 303.0,
+  "resource_decay": 0.5,
+  "resource_supply": 1.0,
+  "rng_mode": "independent",
+  "rtol": 1e-08,
+  "specialization_ratio": 8.0,
+  "t_end": 60000.0,
+  "temperatures_k": [
+    288.0,
+    294.0,
+    300.0,
+    306.0,
+    312.0,
+    318.0
+  ],
+  "thermal": {
+    "mortality_ea": 0.3,
+    "mortality_ed": 3.0,
+    "mortality_topt": 340.0,
+    "uptake_ea": 0.65,
+    "uptake_ed": 3.0,
+    "uptake_topt_range": [
+      298.0,
+      315.0
+    ]
+  },
+  "uptake_scale_range": [
+    0.5,
+    1.5
+  ]
+}

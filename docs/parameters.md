@@ -14,7 +14,8 @@ temperature (303 K, 30 °C).
 | Uptake | 0.65 | 3.0 | U(298, 315) | optimum only |
 | Mortality | 0.30 | 3.0 | 340 (shared) | no |
 
-* Only **uptake** and **mortality** depend on temperature.
+* Only **uptake** and **mortality** depend on temperature. Mortality is a generic
+  first-order loss of consumer biomass.
 * **Leakage fractions, resource supply and resource decay are temperature
   independent.**
 * Because the mortality optimum (340 K) lies far above the simulated range,
@@ -40,7 +41,7 @@ temperature (303 K, 30 °C).
 |---|---|
 | Temperature | 288, 294, 300, 306, 312, 318 K (15–45 °C) |
 | Leakage fraction (same for all resources) | 0.0, 0.2, 0.4, 0.6, 0.8 |
-| Communities | 15 in the pilot |
+| Communities | 15 in the pilot, 60 in the main run |
 
 ## Numerics and definitions
 
@@ -49,5 +50,5 @@ temperature (303 K, 30 °C).
 | Solver | LSODA, rtol 1e-8, atol 1e-12 |
 | Integration horizon | t = 0 to 60000 (the pilot script used 5000) |
 | Extinction threshold | consumer biomass ≤ 1e-5 |
-| CUE reference resource level | R0 = 1 for every resource |
+| Reference resource level for the retention metrics | R0 = 1 for every resource (normalised reference, not the realised equilibrium); sensitivity at 0.5 and 2 |
 

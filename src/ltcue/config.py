@@ -66,7 +66,7 @@ class ExperimentConfig:
 
     # Outcome definitions
     extinction_threshold: float = 1e-5
-    cue_reference_resource: float = 1.0
+    reference_resource: float = 1.0
 
     thermal: ThermalTraits = field(default_factory=ThermalTraits)
 

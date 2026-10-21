@@ -22,7 +22,7 @@ def test_shape_and_columns(small):
     cfg, table, states = small
     assert len(table) == 2 * 2 * 2
     assert states.shape == (len(table), cfg.n_consumers + cfg.n_resources)
-    assert {"leak", "T", "rep", "richness", "biomass", "cue", "rate_rel"} <= set(table.columns)
+    assert {"leak", "T", "rep", "richness", "biomass", "retention_proxy", "retention_proxy_flux", "gross_retained", "gross_retained_flux", "rate_rel"} <= set(table.columns)
 
 
 def test_states_nonnegative_and_integrator_succeeds(small):
@@ -53,7 +53,8 @@ def test_legacy_mode_reproduces_pilot_results():
     assert len(merged) == len(table)
     assert (merged["richness"] == merged["richness_pilot"]).all()
     np.testing.assert_allclose(merged["biomass"], merged["biomass_pilot"], rtol=1e-5, atol=1e-8)
-    np.testing.assert_allclose(merged["cue"], merged["cue_pilot"], atol=1e-8)
+    # the pilot stored its net-retention proxy (then called "cue")
+    np.testing.assert_allclose(merged["retention_proxy"], merged["cue"], atol=1e-8)
 
 
 def test_steady_state_mass_balance():

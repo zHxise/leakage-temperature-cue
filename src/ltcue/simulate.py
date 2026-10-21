@@ -12,10 +12,12 @@ from digimicpy import solve_micrm
 from .communities import Community, build_community, parameters_at
 from .config import ExperimentConfig
 from .metrics import (
-    community_cue,
+    community_average,
     convergence_diagnostics,
-    reference_cue,
+    gross_retained_fraction,
+    net_retention_proxy,
     survivors,
+    uptake_at_reference,
 )
 
 
@@ -43,7 +45,10 @@ def simulate_point(
     state = result.y[:, -1]
     consumers = state[:n]
     alive = survivors(consumers, cfg.extinction_threshold)
-    per_consumer = reference_cue(parameters, cfg.cue_reference_resource)
+    r0 = cfg.reference_resource
+    proxy = net_retention_proxy(parameters, r0)
+    gross = gross_retained_fraction(parameters, r0)
+    flux_weight = consumers * uptake_at_reference(parameters, r0)
     threshold = cfg.extinction_threshold
 
     row = {
@@ -53,9 +58,11 @@ def simulate_point(
         "ok": bool(result.success),
         "richness": int(alive.sum()),
         "biomass": float(consumers.sum()),
-        "cue": community_cue(per_consumer, consumers, alive, "biomass"),
-        "cue_equal": community_cue(per_consumer, consumers, alive, "equal"),
-        "n_negative_cue": int((per_consumer[alive] < 0).sum()),
+        "retention_proxy": community_average(proxy, consumers, alive),
+        "retention_proxy_flux": community_average(proxy, consumers, alive, flux_weight),
+        "gross_retained": community_average(gross, consumers, alive),
+        "gross_retained_flux": community_average(gross, consumers, alive, flux_weight),
+        "n_negative_proxy": int((proxy[alive] < 0).sum()),
         "near_threshold": int(
             ((consumers > 0.1 * threshold) & (consumers < 10.0 * threshold)).sum()
         ),

@@ -77,13 +77,22 @@ so run `reference_sensitivity.py` first. Numerical checks are run with
 column names (`cue`), which are identical to `retention_proxy`.
 Figures need matplotlib (included in `requirements.txt`).
 
+## Compact example
+
+`examples/paired_temperature_leakage.py` is a self-contained example (DigiMicPy and
+NumPy only, about 20 seconds) of the paired design with the convergence diagnostics
+and the reference-level sensitivity. Notes on the DigiMicPy documentation and
+behaviour found along the way are in
+[`docs/digimicpy_notes.md`](docs/digimicpy_notes.md).
+
 ## Layout
 
 ```
 src/ltcue/    configuration, community construction, simulation, metrics, analysis
 scripts/      run_experiment, merge_results, make_figures, reference_sensitivity, run_sensitivity
 tests/        unit tests and regression test against the earlier script
-docs/         technical note and parameters
+examples/     compact paired-design example
+docs/         technical note, parameters and notes on DigiMicPy
 results/      summary tables (final states and sensitivity runs are not tracked)
 figures/      figures of the technical note
 ```

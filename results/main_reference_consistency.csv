@@ -1,0 +1,3 @@
+metric,n_runs,n_sign_changes,n_pairs_equal_leakage,n_reversed_equal_leakage,n_pairs_different_leakage,n_reversed_different_leakage,n_negative_R0_0.5,n_negative_R0_1,n_negative_R0_2
+proxy,1799,406,4495,0,21576,676,406,53,0
+proxy_flux,1799,400,4495,0,21576,569,400,48,0

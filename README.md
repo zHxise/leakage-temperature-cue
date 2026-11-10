@@ -38,7 +38,8 @@ Model assumptions, results and limitations are in
   efficiency.
 * Both are averaged over survivors with **biomass weights** and with **flux
   weights** (biomass times uptake at the reference resource vector). Sensitivity to
-  R0 = 0.5, 1 and 2 is computed from the stored final states.
+  R0 = 0.5, 1 and 2 is computed from the stored final states, including how many
+  signs change and how many within-community rankings reverse across R0.
 * Convergence diagnostics are stored for every run: integrator success, largest
   residual of the equations, largest per-capita rate of change of survivors and
   the number of consumers near the extinction threshold.
@@ -81,8 +82,11 @@ Figures need matplotlib (included in `requirements.txt`).
 
 `examples/paired_temperature_leakage.py` is a self-contained example (DigiMicPy and
 NumPy only, about 20 seconds) of the paired design with the convergence diagnostics
-and the reference-level sensitivity. Notes on the DigiMicPy documentation and
-behaviour found along the way are in
+and the reference-level sensitivity. `examples/slow_transient.py` (about 2 seconds)
+shows one community in which the endpoint residual is small at t = 5000 while a
+survivor is still declining; its recorded output, with version, seed, tolerances
+and survivor threshold, is in `examples/slow_transient_output.txt`. Notes on the
+DigiMicPy documentation and behaviour found along the way are in
 [`docs/digimicpy_notes.md`](docs/digimicpy_notes.md).
 
 ## Layout
@@ -91,7 +95,7 @@ behaviour found along the way are in
 src/ltcue/    configuration, community construction, simulation, metrics, analysis
 scripts/      run_experiment, merge_results, make_figures, reference_sensitivity, run_sensitivity
 tests/        unit tests and regression test against the earlier script
-examples/     compact paired-design example
+examples/     compact paired-design example and slow-transient example
 docs/         technical note, parameters and notes on DigiMicPy
 results/      summary tables (final states and sensitivity runs are not tracked)
 figures/      figures of the technical note

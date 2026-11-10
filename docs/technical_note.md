@@ -40,10 +40,13 @@ Uncertainty is a 95 % bootstrap over communities.
   and decay 0.5 give a resource level of 2 without consumers. Results are also
   computed at R0 = 0.5 and 2. With a uniform R0 the proxy is exactly
   `P(R0) = G − K/R0`, with K the weighted mean of `m_i / sum_j u_ij`, and the
-  weights do not depend on R0, so signs and orderings are the same for every R0
-  and only magnitudes change; this is a property of the definition, not an
-  empirical robustness test. A non-uniform reference vector (for example the
-  realised resource levels) would be a different and informative check, not done here.
+  weights do not depend on R0. This does not make signs or rankings independent
+  of R0: P is negative when R0 < K/G, and two treatments with different G and K
+  can swap order as R0 changes. Only the order of treatments with the same
+  leakage (same G) is fixed by the definition. The sensitivity to R0 is therefore
+  reported from the runs (below). A non-uniform reference vector (for example
+  the realised resource levels) would address an additional question, not
+  examined here.
 
 ## Results (means over 60 communities)
 
@@ -73,19 +76,32 @@ for leakage 0 to 0.8), so slopes per unit leakage are summaries only (−46 at
   the set of survivors changes). Without leakage it rises from 0.83 at 15 °C to
   0.88 at 27 °C and falls to 0.76 at 45 °C (flux-weighted: 0.84, 0.88, 0.77); the two weightings differ by at most 0.01
   without leakage.
-* Statements that hold at R0 = 0.5, 1 and 2 (`results/main_reference_claims.csv`;
-  by construction, see above, so they are consequences of the definition):
-  the proxy decreases with leakage at every temperature; without leakage it is
-  highest at 27 °C among the simulated temperatures, and 27 °C is higher than
-  both 21 and 33 °C at every leakage level (paired intervals above zero); it is
-  lower at 15 °C than at 27 °C (−0.10, −0.05, −0.02 for R0 = 0.5, 1, 2, no
-  leakage) and lower at 45 °C than at 39 °C (−0.20, −0.10, −0.05), with
-  intervals excluding zero. The size of these differences scales with 1/R0.
-* Not invariant: the sign and level of the proxy. At 0.8 leakage and 45 °C the
-  proxy is negative in 59/59 (100 %), 35/59 (59 %) and 0/59 (0 %) of the
-  communities with survivors for R0 = 0.5, 1 and 2; at 15 °C, in 60/60 (100 %),
-  11/60 (18 %) and 0/60 (0 %). Statements about whether the proxy is positive or
-  negative should not be made.
+* Sensitivity to R0 = 0.5, 1 and 2 (`results/main_reference_claims.csv` and
+  `results/main_reference_consistency.csv`; comparisons within each community,
+  biomass-weighted proxy, flux-weighted in parentheses).
+  * Fixed by the definition: the order of temperatures at equal leakage. It is
+    the same at every R0 in all 4,495 treatment pairs. Without leakage the proxy
+    is highest at 27 °C among the simulated temperatures, and 27 °C is higher
+    than both 21 and 33 °C at every leakage level (paired intervals above zero);
+    it is lower at 15 °C than at 27 °C (−0.10, −0.05, −0.02 for R0 = 0.5, 1, 2)
+    and lower at 45 °C than at 39 °C (−0.20, −0.10, −0.05), with intervals
+    excluding zero. The size of these differences scales with 1/R0.
+  * Not fixed by the definition, but observed at the three R0: the proxy
+    decreases with leakage at every temperature (slope intervals below zero).
+  * Dependent on R0, sign: the proxy is negative in 406, 53 and 0 of the 1,799
+    runs with survivors for R0 = 0.5, 1 and 2 (400, 48 and 0), so the sign
+    changes across R0 in 406 runs (400), 339 of them at 0.8 leakage. At 0.8
+    leakage and 45 °C it is negative in 59/59 (100 %), 35/59 (59 %) and 0/59
+    (0 %) of the communities with survivors; at 15 °C, in 60/60 (100 %), 11/60
+    (18 %) and 0/60 (0 %).
+  * Dependent on R0, rankings across leakage levels: the order of two
+    treatments with different leakage changes across R0 in 676 of 21,576 pairs,
+    3.1 % (569, 2.6 %). The reversals involve a hot treatment with less leakage
+    and a cooler one with more: for example, the mean proxy without leakage at
+    45 °C is below the mean at 0.2 leakage and 21 °C for R0 = 0.5 (0.51 against
+    0.54) and above it for R0 = 1 (0.76 against 0.67).
+  * Statements about the sign of the proxy, or about rankings between
+    treatments that differ in leakage, should not be made without stating R0.
 
 ## Numerical checks (`results/sensitivity_summary.csv`, 20 communities, 600 runs each)
 
@@ -126,8 +142,9 @@ the earlier `cue` column (verified), so the values are unchanged.
 3. Leakage is temperature independent and equal for all resources and species.
 4. Mortality is a generic loss term; interpretation as maintenance, death or
    washout cannot be identified within the model.
-5. The proxy depends on the reference environment R0 through its level and
-   magnitude differences (see above).
+5. The proxy depends on the reference environment R0: its level, its sign and
+   the ranking of treatments that differ in leakage (see above). Only R0 = 0.5,
+   1 and 2, uniform across resources, were examined.
 6. Communities are small (20 consumers) and few persist (2–4 on average), so the
    persistence effects are small relative to variation between communities.
 7. Persistence is "persisting consumers over the integration horizon", not a

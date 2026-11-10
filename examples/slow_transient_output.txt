@@ -1,0 +1,10 @@
+DigiMicPy 0.1.0 (commit ac9b9fe), NumPy 2.5.3, SciPy 1.18.1
+seed 4 (numpy.random.default_rng), 20 consumers, 10 resources
+solver LSODA, rtol 1e-08, atol 1e-12, survivor threshold 1e-05
+initial state: consumers 0.01, resources 1.0
+
+  t_end success survivors  max |residual|  max |dC/dt|/C  smallest survivor
+   5000    True         5         3.0e-08        1.9e-03            1.6e-05
+  20000    True         4         7.5e-14        2.4e-15            1.5e+00
+  60000    True         4         4.4e-16        3.3e-17            1.5e+00
+ 120000    True         4         4.2e-15        6.6e-17            1.5e+00

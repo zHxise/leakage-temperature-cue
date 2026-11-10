@@ -17,6 +17,8 @@ Run from the repository root:
 
 from __future__ import annotations
 
+from itertools import combinations
+
 import numpy as np
 from digimicpy import (
     MiCRMParameters,
@@ -133,8 +135,29 @@ def main() -> None:
             print(f"{t:6.0f} {l:5.1f} {mean('richness'):9.2f} {mean('biomass'):8.2f} {mean('gross_1.0'):6.2f}  "
                   + "  ".join(f"{mean(f'net_bio_{r}'):11.3f}" for r in REFERENCE_LEVELS))
 
-    print("\nWith a uniform R0 the proxy equals gross - K/R0, so its sign and ordering across "
-          "treatments do not depend on R0; only magnitudes do.")
+    # With a uniform R0 the proxy equals gross - K/R0 (K does not depend on R0).
+    # Its sign changes at R0 = K/gross, and treatments with different gross and K
+    # can swap order as R0 changes; only the order of treatments with the same
+    # leakage is fixed. Count what happens in these runs, within each community.
+    net = {key: np.array([r[f"net_bio_{r0}"] for r0 in REFERENCE_LEVELS]) for key, r in results.items()}
+    sign_changes = sum(len(set(np.sign(v))) > 1 for v in net.values())
+    pairs = {"same": 0, "different": 0}
+    reversed_ = {"same": 0, "different": 0}
+    for s in range(N_COMMUNITIES):
+        cells = [(l, t) for l in LEAKAGE for t in TEMPERATURES]
+        for a, b in combinations(cells, 2):
+            kind = "same" if a[0] == b[0] else "different"
+            pairs[kind] += 1
+            reversed_[kind] += len(set(np.sign(net[(s, *a)] - net[(s, *b)]))) > 1
+    print(f"\nnet proxy (biomass-weighted) across R0 = {REFERENCE_LEVELS}, within community:")
+    print(f"  runs whose sign changes with R0: {sign_changes} of {len(net)}")
+    print(f"  treatment pairs with the same leakage whose order changes: "
+          f"{reversed_['same']} of {pairs['same']}")
+    print(f"  treatment pairs with different leakage whose order changes: "
+          f"{reversed_['different']} of {pairs['different']}")
+    print("Rankings at equal leakage cannot depend on R0; signs and rankings across leakage "
+          "levels can.\nReport the counts for the runs at hand (in the full grid of this "
+          "repository some rankings\nacross leakage levels do reverse; see docs/technical_note.md).")
 
 
 if __name__ == "__main__":

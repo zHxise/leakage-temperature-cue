@@ -64,3 +64,24 @@ def test_claims_table_denominator_excludes_communities_without_survivors():
     claims = module.claims_table(pd.DataFrame(rows), cfg)
     assert claims["n_with_survivors_at_max_leakage_45C"].iloc[0] == 3
     assert claims["share_negative_at_max_leakage_45C"].iloc[0] == 1.0
+
+
+def test_reference_consistency_counts_sign_changes_and_reversals():
+    from ltcue.analysis import reference_consistency
+
+    # proxy = G - K / R0 for one community: A (G=1.0, K=0.4), B (G=0.8, K=0.1)
+    # at different leakage, and C (G=1.0, K=0.45) at the same leakage as A.
+    rows = []
+    for r0 in (0.5, 1.0, 2.0):
+        rows += [
+            {"R0": r0, "rep": 0, "leak": 0.0, "T": 300.0, "proxy": 1.0 - 0.4 / r0},
+            {"R0": r0, "rep": 0, "leak": 0.2, "T": 300.0, "proxy": 0.8 - 0.1 / r0},
+            {"R0": r0, "rep": 0, "leak": 0.0, "T": 310.0, "proxy": 1.0 - 0.45 / r0},
+        ]
+    out = reference_consistency(pd.DataFrame(rows), "proxy")
+    assert out["n_runs"] == 3
+    assert out["n_sign_changes"] == 0 and out["n_negative_R0_0.5"] == 0
+    # A and C share G, so their order cannot depend on R0
+    assert out["n_pairs_equal_leakage"] == 1 and out["n_reversed_equal_leakage"] == 0
+    # A and C are below B at R0 = 0.5 and 1 and above it at R0 = 2
+    assert out["n_pairs_different_leakage"] == 2 and out["n_reversed_different_leakage"] == 2

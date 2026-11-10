@@ -3,9 +3,12 @@
 Recomputes the net-retention proxy and the gross retained fraction at
 R0 in {0.5, 1, 2} from the stored final states of a run (no new simulations),
 with biomass weights and with flux weights (biomass x uptake at the reference
-resource vector). For a uniform R0 the proxy is exactly G - K/R0, so signs and
-orderings do not depend on R0 and only magnitudes (and the share of negative
-values) scale; the table makes this explicit.
+resource vector). For a uniform R0 the proxy is exactly G - K/R0, with K
+independent of R0. This does not make signs or treatment rankings independent of
+R0: the proxy is negative when R0 < K/G, and two treatments with different G and
+K can swap order as R0 changes. Only the order of treatments with the same
+leakage (same G) is fixed. The script therefore counts, in the stored runs, how
+many signs change and how many within-community rankings reverse across R0.
 
 Example:
     python scripts/reference_sensitivity.py --prefix results/main
@@ -20,7 +23,7 @@ import numpy as np
 import pandas as pd
 
 from ltcue import ExperimentConfig, build_community, parameters_at
-from ltcue.analysis import bootstrap_mean_ci, leakage_slopes, summarize
+from ltcue.analysis import bootstrap_mean_ci, leakage_slopes, reference_consistency, summarize
 from ltcue.metrics import (
     community_average,
     gross_retained_fraction,
@@ -109,12 +112,19 @@ def main() -> None:
     claims = claims_table(frame, cfg)
     claims.to_csv(f"{out}_reference_claims.csv", index=False)
 
+    consistency = pd.DataFrame(
+        [{"metric": value, **reference_consistency(frame, value)} for value in ("proxy", "proxy_flux")]
+    )
+    consistency.to_csv(f"{out}_reference_consistency.csv", index=False)
+
     for value in ("proxy", "proxy_flux"):
         for r0 in REFERENCE_LEVELS:
             sub = summary[(summary["metric"] == value) & (summary["R0"] == r0)]
             wide = sub.pivot(index="leak", columns="T", values="mean")
             print(f"\n{value}, R0 = {r0}\n{wide.round(3).to_string()}")
     print("\n" + claims.round(3).to_string(index=False))
+    print("\nSign changes and ranking reversals across R0 (within community)")
+    print(consistency.T.to_string(header=False))
 
 
 if __name__ == "__main__":
